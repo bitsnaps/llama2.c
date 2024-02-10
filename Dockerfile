@@ -17,7 +17,7 @@ RUN make runfast
 
 # Download the model file and place it in the models directory
 RUN mkdir -p /app/models && \
-    wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories110M.bin?download=true
+    wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories110M.bin?download=true -O stories110M.bin
 
 # Copy the model file to the appropriate location (if needed)
 COPY stories110M.bin /app/models/
