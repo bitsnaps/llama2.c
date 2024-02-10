@@ -6,7 +6,8 @@ WORKDIR /app
 
 # Install git and wget for cloning the repo and downloading the model file
 RUN apt-get update && \
-    apt-get install -y git wget make gcc
+    apt-get install -y git wget make gcc && \
+    git lfs install
 
 # Clone the Llama2 repository
 RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git .
@@ -16,7 +17,7 @@ RUN make runfast
 
 # Download the model file and place it in the models directory
 RUN mkdir -p /app/models && \
-    wget -P /app/models/ https://huggingface.co/karpathy/tinyllamas/raw/main/stories110M.bin
+    wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories110M.bin?download=true -O stories110M.bin
 
 # Copy the model file to the appropriate location (if needed)
 COPY stories110M.bin /app/models/
