@@ -5,6 +5,14 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - init: make runfast
+  - init: |
+      make runfast
+      wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories15M.bin
+      make run
+      ./run stories15M.bin
+      echo "running python example: "
+      pip install -q torch numpy sentencepiece spm
+      python tinystories.py download
+      python tinystories.py pretokenize
 
 
