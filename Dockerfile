@@ -2,7 +2,7 @@
 FROM debian:latest
 
 # Set the working directory in the container to /app
-#WORKDIR /app
+WORKDIR /app
 
 # Install git and wget for cloning the repo and downloading the model file
 RUN apt-get update && \
@@ -32,4 +32,4 @@ EXPOSE  8080
 #CMD ["./runfast", "-t", "0.9", "-p", "0.9", "-n", "1024", "-i", "Once upon a time, there "]
 #RUN gcc api.c -o server
 
-CMD ["./app/server"]
+CMD ["./server"]
