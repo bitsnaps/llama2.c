@@ -9,12 +9,11 @@ RUN apt-get update && \
     apt-get install -y git wget make gcc
 
 # Clone the Llama2 repository
-RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git .
-
-# Compile and build the program
-#RUN make runfast
-RUN gcc -Ofast -o run run.c -lm
-RUN gcc -Ofast -o runq runq.c -lm
+RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git app && \
+    cd app && \
+    gcc -Ofast -o run run.c -lm && \
+    gcc -Ofast -o runq runq.c -lm && \
+    gcc api.c -o server
 
 # Download the model file and place it in the models directory
 #RUN mkdir -p /app/models && \
@@ -31,6 +30,6 @@ EXPOSE  8080
 
 # The command to run the application
 #CMD ["./runfast", "-t", "0.9", "-p", "0.9", "-n", "1024", "-i", "Once upon a time, there "]
-RUN gcc api -o server
+#RUN gcc api.c -o server
 
-CMD ["./server"]
+CMD ["./app/server"]
