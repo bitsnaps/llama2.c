@@ -2,7 +2,7 @@
 FROM debian:latest
 
 # Set the working directory in the container to /app
-WORKDIR /app
+#WORKDIR /app
 
 # Install git and wget for cloning the repo and downloading the model file
 RUN apt-get update && \
@@ -13,7 +13,11 @@ RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git app && \
     cd app && \
     gcc -Ofast -o run run.c -lm && \
     gcc -Ofast -o runq runq.c -lm && \
-    gcc api.c -o server
+    gcc api.c -o server && \
+    mv index.html .. && \
+    mv server .. && \
+    mv run .. && \
+    mv runq
 
 # Download the model file and place it in the models directory
 #RUN mkdir -p /app/models && \
