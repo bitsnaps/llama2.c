@@ -12,7 +12,9 @@ RUN apt-get update && \
 #RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git .
 
 # Compile and build the program
-RUN make runfast
+#RUN make runfast
+RUN gcc -Ofast -o run run.c -lm
+RUN gcc -Ofast -o runq runq.c -lm
 
 # Download the model file and place it in the models directory
 #RUN mkdir -p /app/models && \
