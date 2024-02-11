@@ -11,7 +11,7 @@ tasks:
       make run
       ./run stories15M.bin
       echo "running python example: "
-      pip install -q torch numpy sentencepiece spm
+      pip install -q torch numpy sentencepiece spm tqdm
       python tinystories.py download
       python tinystories.py pretokenize
 
