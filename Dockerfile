@@ -9,7 +9,7 @@ RUN apt-get update && \
     apt-get install -y git wget make gcc
 
 # Clone the Llama2 repository
-#RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git .
+RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git .
 
 # Compile and build the program
 #RUN make runfast
