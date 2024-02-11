@@ -6,8 +6,7 @@ FROM debian:latest
 
 # Install git and wget for cloning the repo and downloading the model file
 RUN apt-get update && \
-    apt-get install -y git wget make gcc && \
-    git lfs install
+    apt-get install -y git wget make gcc
 
 # Clone the Llama2 repository
 #RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git .
