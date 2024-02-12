@@ -2,7 +2,7 @@
 FROM debian:latest
 
 # Set the working directory in the container to /app
-WORKDIR /app
+#WORKDIR /app
 
 # Install git and wget for cloning the repo and downloading the model file
 RUN apt-get update && \
