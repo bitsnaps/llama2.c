@@ -11,8 +11,7 @@ RUN apt-get update && \
 # Clone the Llama2 repository
 RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git app && \
     cd app && \
-    gcc -Ofast -o run run.c -lm && \
-    gcc -Ofast -o runq runq.c -lm && \
+    make runfast && \
     gcc api.c -o server
 
 # Download the model file and place it in the models directory
