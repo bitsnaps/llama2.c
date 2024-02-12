@@ -22,7 +22,7 @@ RUN git clone --depth  1 https://github.com/bitsnaps/llama2.c.git app && \
 #COPY stories110M.bin /app/models/
 
 # Expose port if the application runs a server
-EXPOSE  8000
+EXPOSE  8080
 
 # Define environment variable
 #ENV MODEL_FILE=stories110M.bin
