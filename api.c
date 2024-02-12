@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define PORT 8000
+#define PORT 8080
 #define BUFFER_SIZE 104857600
 
 const char *get_file_extension(const char *file_name) {
@@ -93,24 +93,25 @@ char *url_decode(const char *src) {
     return decoded;
 }
 
-void build_http_response(const char *file_name, 
-                        const char *file_ext, 
-                        char *response, 
-                        size_t *response_len) {
+
+void build_http_response(const char *file_name,   
+                         const char *file_ext,   
+                         char *response,   
+                         size_t *response_len) {
     // build HTTP header
     const char *mime_type = get_mime_type(file_ext);
     char *header = (char *)malloc(BUFFER_SIZE * sizeof(char));
     snprintf(header, BUFFER_SIZE,
-             "HTTP/1.1 200 OK\r\n"
+             "HTTP/1.1  200 OK\r\n"
              "Content-Type: %s\r\n"
              "\r\n",
              mime_type);
 
-    // if file not exist, response is 404 Not Found
+    // if file not exist, response is  404 Not Found
     int file_fd = open(file_name, O_RDONLY);
     if (file_fd == -1) {
         snprintf(response, BUFFER_SIZE,
-                 "HTTP/1.1 404 Not Found\r\n"
+                 "HTTP/1.1  404 Not Found\r\n"
                  "Content-Type: text/plain\r\n"
                  "\r\n"
                  "404 Not Found");
@@ -124,15 +125,15 @@ void build_http_response(const char *file_name,
     off_t file_size = file_stat.st_size;
 
     // copy header to response buffer
-    *response_len = 0;
+    *response_len =  0;
     memcpy(response, header, strlen(header));
     *response_len += strlen(header);
 
     // copy file to response buffer
     ssize_t bytes_read;
-    while ((bytes_read = read(file_fd, 
-                            response + *response_len, 
-                            BUFFER_SIZE - *response_len)) > 0) {
+    while ((bytes_read = read(file_fd,  
+                            response + *response_len,  
+                            BUFFER_SIZE - *response_len)) >  0) {
         *response_len += bytes_read;
     }
     free(header);
@@ -142,32 +143,40 @@ void build_http_response(const char *file_name,
 void *handle_client(void *arg) {
     int client_fd = *((int *)arg);
     char *buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
+    bool serve_index = false;
 
-    // receive request data from client and store into buffer
-    ssize_t bytes_received = recv(client_fd, buffer, BUFFER_SIZE, 0);
-    if (bytes_received > 0) {
-        // check if request is GET
+    // Receive request data from client and store into buffer
+    ssize_t bytes_received = recv(client_fd, buffer, BUFFER_SIZE,   0);
+    if (bytes_received >   0) {
+        // Check if request is GET
         regex_t regex;
         regcomp(&regex, "^GET /([^ ]*) HTTP/1", REG_EXTENDED);
         regmatch_t matches[2];
 
-        if (regexec(&regex, buffer, 2, matches, 0) == 0) {
-            // extract filename from request and decode URL
+        if (regexec(&regex, buffer,   2, matches,   0) ==   0) {
+            // Extract filename from request and decode URL
             buffer[matches[1].rm_eo] = '\0';
             const char *url_encoded_file_name = buffer + matches[1].rm_so;
             char *file_name = url_decode(url_encoded_file_name);
 
-            // get file extension
+            // If the request is for '/', serve index.html
+            if ((strcmp(file_name, "/") ==   0)|| (strcmp(file_name, "") ==  0)) {
+                serve_index = true;
+                free(file_name);
+                file_name = strdup("index.html");
+            }
+
+            // Get file extension
             char file_ext[32];
             strcpy(file_ext, get_file_extension(file_name));
 
-            // build HTTP response
-            char *response = (char *)malloc(BUFFER_SIZE * 2 * sizeof(char));
+            // Build HTTP response
+            char *response = (char *)malloc(BUFFER_SIZE *   2 * sizeof(char));
             size_t response_len;
             build_http_response(file_name, file_ext, response, &response_len);
 
-            // send HTTP response to client
-            send(client_fd, response, response_len, 0);
+            // Send HTTP response to client
+            send(client_fd, response, response_len,   0);
 
             free(response);
             free(file_name);
